@@ -95,9 +95,6 @@ export default function CalculateDeliveryForm() {
       <Group w={'100%'} justify={'flex-end'} mt='xl'>
         <Button
         variant="filled"
-        radius={'lg'}
-        size='xl'
-        color={'blue'}
         w={{base: '100%', md: '32.5%'}}>
             Рассчитать
         </Button>

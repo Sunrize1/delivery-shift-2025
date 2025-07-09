@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import './globals.css';
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps, createTheme } from '@mantine/core';
 import Header from "@/components/Сommon/Header";
+import { Notifications } from "@mantine/notifications";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,6 +71,19 @@ const theme = createTheme({
       defaultProps: {
         c: 'var(--text-primary)'
       }
+    },
+    Input: {
+      defaultProps: {
+        size: 'lg',
+        radius: 'md',
+      }
+    },
+    Button: {
+      defaultProps: {
+        size: 'lg',
+        radius: 'lg',
+        bg: 'var(--accent-color)',
+      }
     }
   },
   headings: {
@@ -99,8 +114,9 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript/>
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`} style={{ margin: 0, minHeight: '100vh', backgroundColor: 'var(--bg-secondary)' }}>
+      <body className={`${geistSans.variable} ${geistMono.variable}`} style={{ margin: 0, minHeight: '100vh' }}>
         <MantineProvider theme={theme}>
+          <Notifications />
           <Header/>
           {children}
         </MantineProvider>

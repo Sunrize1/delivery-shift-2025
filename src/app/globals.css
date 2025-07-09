@@ -8,11 +8,12 @@
   --text-muted: #97A1AF;
   --border-color: #CED2DA;
   --accent-color: #1975FF;
+  --color-error: #fa5252;
 }
 
 /* CSS переменные для темной темы */
 [data-mantine-color-scheme="dark"] {
-  --bg-primary: #344051;
+  --bg-primary: #141C24;
   --bg-secondary: #344051;
   --bg-surface: #141C24;
   --text-primary: #FFFFFF;
@@ -20,6 +21,7 @@
   --text-muted: #97A1AF;
   --border-color: #CED2DA;
   --accent-color: #1975FF;
+  --color-error: #ff6b6b;
 }
 
 body {
@@ -70,6 +72,10 @@ a {
 
 .mantine-TextInput-label, .mantine-Select-label {
   color: var(--text-primary) !important;
+}
+
+.mantine-Input-input {
+  background-color: var(--bg-surface) !important;
 }
 
 .mantine-Button-root[data-variant="filled"] {

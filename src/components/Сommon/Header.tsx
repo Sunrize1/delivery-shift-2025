@@ -3,6 +3,7 @@ import Logo from '../../assets/Header/Logo_Delivery.svg'
 import Etrance from '../../assets/Header/Etrance.svg'
 import Image from 'next/image'
 import ThemeToggle from "./ThemeToggle"
+import Link from "next/link"
 
 export default function Header () {
 
@@ -24,7 +25,9 @@ export default function Header () {
                         height={24}
                         alt="Entrance"
                     />
-                    <Text c={'var(--accent-color)'} size={'h3'}>Войти</Text>
+                    <Link href={'/auth'} style={{textDecoration: 'none'}}>
+                        <Text c={'var(--accent-color)'} size={'h3'}>Войти</Text>
+                    </Link>
                 </Group>
                 <ThemeToggle/>
             </Group>

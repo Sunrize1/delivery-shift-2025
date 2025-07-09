@@ -19,7 +19,8 @@ import TrackPackageForm from "@/components/Сommon/TrackPackageForm";
 
 export default function HomePage() {
   return (
-    <Container pos={"relative"} size="lg" py={113} >
+    <div style={{ backgroundColor: 'var(--bg-secondary)', minHeight: '100vh' }}>
+      <Container pos={"relative"} size="lg" py={113} >
       <Stack gap={80}>
         <Group align="center" justify="space-between">
           <Stack gap="xl">
@@ -73,5 +74,6 @@ export default function HomePage() {
         </Flex>
       </Stack>
     </Container>
+    </div>
   );
 }

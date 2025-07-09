@@ -7,15 +7,11 @@ export default function TrackPackageForm() {
             <Flex direction={{base: 'column', md: 'row'}} gap={'md'} mt={'xl'}>
                <TextInput
                    placeholder="Номер заказа"
-                   radius={'md'}
-                   size="lg"
                    type="number"
                />
                <Button 
                    variant="filled"
-                   radius={'lg'}
-                   size="lg"
-                   color={'blue'}>
+                   >
                  Найти
                </Button>
             </Flex>
