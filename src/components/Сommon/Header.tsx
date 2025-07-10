@@ -32,7 +32,7 @@ export default function Header() {
 
   const getEntranceIconClass = () => {
     const baseClass = "entrance-icon";
-    const shouldBeAccent = !isAuthenticated && pathname === "/";
+    const shouldBeAccent = !isAuthenticated && (pathname === "/" || pathname === "/auth");
     return shouldBeAccent ? `${baseClass} accent` : baseClass;
   };
 
@@ -135,7 +135,7 @@ export default function Header() {
                         alt="Entrance"
                         className={getEntranceIconClass()}
                       />
-                      <Text c={pathname === "/" ? "var(--accent-color)" : "var(--text-primary)"} size={"h3"}>
+                      <Text c={pathname === "/" || pathname === "/auth" ? "var(--accent-color)" : "var(--text-primary)"} size={"h3"}>
                         Войти
                       </Text>
                     </Group>

@@ -140,8 +140,8 @@ export default function AuthForm() {
 
     return (
         <form onSubmit={step === 'phone' ? handlePhoneSubmit : handleCodeSubmit}>
-        <Stack gap={'lg'}>
-            <div style={{ width: 328 }}>
+        <Stack gap={'lg'} w={{base: '100%', sm: 328}}>
+            
                 <Input 
                     w="100%" 
                     placeholder="Телефон" 
@@ -158,10 +158,10 @@ export default function AuthForm() {
                         {form.errors.phone}
                     </Text>
                 )}
-            </div>
+           
             
             {step === 'code' && (
-                <div style={{ width: 328 }}>
+                <>
                     <Input 
                         w="100%" 
                         placeholder="Код из SMS"
@@ -176,11 +176,11 @@ export default function AuthForm() {
                             {form.errors.code}
                         </Text>
                     )}
-                </div>
+                </>
             )}
             
             <Button 
-                w={328} 
+                w={{base: '100%', sm: 328}}
                 type="submit"
                 loading={loading}
             >

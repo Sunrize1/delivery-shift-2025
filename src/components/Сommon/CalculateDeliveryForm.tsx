@@ -5,20 +5,132 @@ import MailIcon from '../../assets/UI/Select/email.svg';
 import PointerIcon from '../../assets/UI/Select/pointer.svg';
 import ChevrinIcon from '../../assets/UI/Select/Chevron Down.svg';
 import Image from "next/image";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { getPoints } from "@/api/delivery/getPoints";
+import { getPackagesTypes } from "@/api/delivery/getPackagesTypes";
+import { calculateDelivery } from "@/api/delivery/calculateDelivery";
+import { Point } from "@/types/delivery/PointsResponse";
+import { Package } from "@/types/delivery/PackagesTypesResponse";
+import { notifications } from "@mantine/notifications";
 
 export default function CalculateDeliveryForm() {
   const [fromCity, setFromCity] = useState<string | null>(null);
   const [toCity, setToCity] = useState<string | null>(null);
   const [packageSize, setPackageSize] = useState<string | null>(null);
+  const [points, setPoints] = useState<Point[]>([]);
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const cityOptions = [
-    { value: 'moscow', label: 'Москва' },
-    { value: 'spb', label: 'Санкт-Петербург' },
-    { value: 'novosibirsk', label: 'Новосибирск' },
-    { value: 'tomsk', label: 'Томск' },
-  ];
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [pointsResponse, packagesResponse] = await Promise.all([
+          getPoints(),
+          getPackagesTypes()
+        ]);
+
+        if (pointsResponse.data.success) {
+          setPoints(pointsResponse.data.points);
+        }
+
+        if (packagesResponse.data.success) {
+          setPackages(packagesResponse.data.packages);
+        }
+      } catch (error) {
+        notifications.show({
+          title: 'Ошибка',
+          message: 'Не удалось загрузить данные',
+          color: 'red',
+        });
+      }
+    };
+
+    loadData();
+  }, []);
+
+  const handleCalculateDelivery = async () => {
+    if (!fromCity || !toCity || !packageSize) {
+      notifications.show({
+        title: 'Ошибка',
+        message: 'Пожалуйста, заполните все поля',
+        color: 'red',
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const senderPoint = points.find(p => p.id === fromCity);
+      const receiverPoint = points.find(p => p.id === toCity);
+      const selectedPackage = packages.find(p => p.id === packageSize);
+
+      if (!senderPoint || !receiverPoint || !selectedPackage) {
+        notifications.show({
+          title: 'Ошибка',
+          message: 'Не удалось найти выбранные данные',
+          color: 'red',
+        });
+        return;
+      }
+
+      const response = await calculateDelivery({
+        package: selectedPackage,
+        senderPoint: {
+          latitude: senderPoint.latitude,
+          longitude: senderPoint.longitude
+        },
+        receiverPoint: {
+          latitude: receiverPoint.latitude,
+          longitude: receiverPoint.longitude
+        }
+      });
+
+      localStorage.setItem('deliveryCalculation', JSON.stringify({
+        options: response.data.options,
+        senderPoint: senderPoint,
+        receiverPoint: receiverPoint,
+        package: selectedPackage
+      }));
+      
+      router.push('/ordering');
+    } catch (error) {
+      notifications.show({
+        title: 'Ошибка',
+        message: 'Произошла ошибка при расчете доставки',
+        color: 'red',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cityOptions = points.map(point => ({
+    value: point.id,
+    label: point.name
+  }));
+
+  const packageOptions = packages.map(pkg => ({
+    value: pkg.id,
+    label: pkg.name
+  }));
+
+  const getPopularCities = (excludeId?: string) => {
+    return points
+      .filter(point => point.id !== excludeId)
+      .slice(0, 3)
+      .map(point => (
+        <a 
+          key={point.id}
+          className="city-tag" 
+          onClick={() => excludeId ? setToCity(point.id) : setFromCity(point.id)}
+        >
+          {point.name}
+        </a>
+      ));
+  };
+
   return (
     <Box bg="var(--bg-surface)" p="xl" style={{ borderRadius: 16 }}>
       <Title order={3}>Рассчитать доставку</Title>
@@ -36,15 +148,7 @@ export default function CalculateDeliveryForm() {
               data={cityOptions}
             />
             <Group>
-              <a className="city-tag" onClick={() => setFromCity('spb')}>
-                Санкт-Петербург
-              </a>
-              <a className="city-tag" onClick={() => setFromCity('novosibirsk')}>
-                Новосибирск
-              </a>
-              <a className="city-tag" onClick={() => setFromCity('tomsk')}>
-                Томск
-              </a>
+              {getPopularCities(toCity || undefined)}
             </Group>
         </Stack>
         <Stack w={'100%'}>
@@ -60,17 +164,8 @@ export default function CalculateDeliveryForm() {
               data={cityOptions}
             />
             <Group>
-              <a className="city-tag" onClick={() => setToCity('moscow')}>
-                Москва
-              </a>
-              <a className="city-tag" onClick={() => setToCity('novosibirsk')}>
-                Новосибирск
-              </a>
-              <a className="city-tag" onClick={() => setToCity('tomsk')}>
-                Томск
-              </a>
+              {getPopularCities(fromCity || undefined)}
             </Group>
-
         </Stack>
         <Stack w={'100%'}>
           <Select
@@ -82,21 +177,19 @@ export default function CalculateDeliveryForm() {
               onChange={setPackageSize}
               leftSection={<Image src={MailIcon} alt="Mail Icon" />}
               rightSection={<Image src={ChevrinIcon} alt="Chevron Icon" />}
-              data={[
-                { value: 'envelope', label: 'Конверт' },
-                { value: 'small_box', label: 'Маленькая коробка' },
-                { value: 'medium_box', label: 'Средняя коробка' },
-                { value: 'large_box', label: 'Большая коробка' },
-              ]}
+              data={packageOptions}
             />
         </Stack>
-
       </Flex>
       <Group w={'100%'} justify={'flex-end'} mt='xl'>
         <Button
-        variant="filled"
-        w={{base: '100%', md: '32.5%'}}>
-            Рассчитать
+          variant="filled"
+          w={{base: '100%', md: '32.5%'}}
+          onClick={handleCalculateDelivery}
+          loading={loading}
+          disabled={!fromCity || !toCity || !packageSize}
+        >
+          Рассчитать
         </Button>
       </Group>
     </Box>
