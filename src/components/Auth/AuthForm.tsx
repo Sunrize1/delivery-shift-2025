@@ -8,6 +8,8 @@ import { auth } from "@/api/auth/auth";
 import { phoneMapper } from "@/utils/phoneMapper";
 import { notifications } from "@mantine/notifications";
 import { createOtp } from "@/api/auth/createOtp";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 type AuthStep = 'phone' | 'code';
 
@@ -16,6 +18,9 @@ export default function AuthForm() {
     const [timer, setTimer] = useState(30);
     const [isTimerActive, setIsTimerActive] = useState(false);
     const [loading, setLoading] = useState(false);
+    
+    const { login } = useAuth();
+    const router = useRouter();
 
     const form = useForm({
         initialValues: {
@@ -87,24 +92,28 @@ export default function AuthForm() {
                     code: parseInt(form.values.code)
                 });
                 
+                login(response.data);
+                
                 notifications.show({
                     title: 'Авторизация успешна',
-                    message: '',
+                    message: 'Добро пожаловать!',
                     color: 'green'
                 });
                 
+                router.push('/');
                 
             } catch (error) {
                 notifications.show({
                     title: 'Ошибка авторизации',
-                    message: '',
+                    message: 'Неверный код',
                     color: 'red'
                 });
+                form.setFieldError('code', 'Неверный код');
             } finally {
                 setLoading(false);
             }
         } else {
-            form.setFieldError('code', 'Неверный код');
+            setLoading(false);
         }
     };
 

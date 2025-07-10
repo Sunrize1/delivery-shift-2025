@@ -88,7 +88,6 @@ a {
   opacity: 0.9 !important;
 }
 
-
 .qr-adaptive {
   transition: filter 0.2s ease;
 }
@@ -96,3 +95,39 @@ a {
 [data-mantine-color-scheme="dark"] .qr-adaptive {
   filter: invert(1);
 }
+
+.theme-adaptive {
+  transition: filter 0.2s ease;
+}
+
+[data-mantine-color-scheme="dark"] .theme-adaptive {
+  filter: invert(1);
+}
+
+.nav-icon {
+  transition: all 0.2s ease;
+  filter: brightness(0) saturate(100%) invert(7%) sepia(31%) saturate(1313%) hue-rotate(202deg) brightness(94%) contrast(93%);
+}
+
+[data-mantine-color-scheme="dark"] .nav-icon {
+  filter: brightness(0) invert(1);
+}
+
+.nav-icon.active {
+  filter: brightness(0) saturate(100%) invert(36%) sepia(94%) saturate(3583%) hue-rotate(213deg) brightness(103%) contrast(101%);
+}
+
+.entrance-icon {
+  transition: all 0.2s ease;
+  filter: brightness(0) saturate(100%) invert(7%) sepia(31%) saturate(1313%) hue-rotate(202deg) brightness(94%) contrast(93%);
+}
+
+[data-mantine-color-scheme="dark"] .entrance-icon {
+  filter: brightness(0) invert(1);
+}
+
+.entrance-icon.accent {
+  filter: brightness(0) saturate(100%) invert(36%) sepia(94%) saturate(3583%) hue-rotate(213deg) brightness(103%) contrast(101%);
+}
+
+

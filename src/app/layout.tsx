@@ -5,6 +5,7 @@ import '@mantine/notifications/styles.css';
 import './globals.css';
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps, createTheme } from '@mantine/core';
 import Header from "@/components/Сommon/Header";
+import { AuthProvider } from "@/context/AuthContext";
 import { Notifications } from "@mantine/notifications";
 
 const geistSans = Geist({
@@ -78,9 +79,21 @@ const theme = createTheme({
         radius: 'md',
       }
     },
-    Button: {
+    TextInput: {
       defaultProps: {
         size: 'lg',
+        radius: 'md',
+      }
+    },
+    Select: {
+      defaultProps: {
+        size: 'lg',
+        radius: 'md',
+      }
+    },
+    Button: {
+      defaultProps: {
+        size: 'xl',
         radius: 'lg',
         bg: 'var(--accent-color)',
       }
@@ -117,8 +130,10 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`} style={{ margin: 0, minHeight: '100vh' }}>
         <MantineProvider theme={theme}>
           <Notifications />
-          <Header/>
-          {children}
+          <AuthProvider>
+            <Header/>
+            {children}
+          </AuthProvider>
         </MantineProvider>
       </body>
     </html>
