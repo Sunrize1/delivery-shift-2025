@@ -95,7 +95,6 @@ const theme = createTheme({
       defaultProps: {
         size: 'xl',
         radius: 'lg',
-        bg: 'var(--accent-color)',
       }
     }
   },

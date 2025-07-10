@@ -1,3 +1,5 @@
+import { optionType } from "./OrderDeliveryRequest";
+
 export interface CalculateDeliveryResponse {
     success: boolean;
     reason: string;
@@ -9,5 +11,5 @@ export interface CalculateDeliveryOption {
     price: number;
     days: number;
     name: string;
-    type: string;
+    type: optionType;
 }
