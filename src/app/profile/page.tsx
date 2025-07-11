@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from "@/context/AuthContext";
-import { Container, Title, Stack, Group, Button, TextInput, Select, Box, Flex } from "@mantine/core";
+import { Container, Title, Stack, Group, Button, TextInput, Select, Box, Flex, Loader } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { updateProfile } from "@/api/profile/updateProfile";
 import { notifications } from "@mantine/notifications";
@@ -9,7 +9,7 @@ import ChevronDownIcon from '../../assets/UI/Select/Chevron Down.svg'
 import Image from "next/image";
 
 export default function ProfilePage() {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, isLoading } = useAuth();
   
   const form = useForm({
     initialValues: {
@@ -41,6 +41,14 @@ export default function ProfilePage() {
       });
     }
   };
+
+  if (isLoading) {
+    return(
+      <Container>
+         <Loader />
+      </Container>
+    );
+  }
 
   return (
     <Container 

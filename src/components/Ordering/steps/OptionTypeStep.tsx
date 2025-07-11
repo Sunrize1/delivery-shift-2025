@@ -73,7 +73,7 @@ export default function OptionTypeStep({ form }: OptionTypeStepProps) {
         radius={'xl'}
         style={{ 
           cursor: 'pointer',
-          border: selectedOption === optionType.DEFAULT ? '2px solid var(--mantine-color-green-6)' : undefined,
+          border: selectedOption === optionType.DEFAULT ? '5px solid var(--mantine-color-green-6)' : undefined,
         }}
         onClick={() => handleOptionSelect(optionType.DEFAULT)}
       >
@@ -99,7 +99,7 @@ export default function OptionTypeStep({ form }: OptionTypeStepProps) {
         radius={'xl'}
         style={{ 
           cursor: 'pointer',
-          border: selectedOption === optionType.EXPRESS ? '2px solid var(--mantine-color-green-6)' : undefined,
+          border: selectedOption === optionType.EXPRESS ? '5px solid var(--mantine-color-green-6)' : undefined,
         }}
         onClick={() => handleOptionSelect(optionType.EXPRESS)}
       >

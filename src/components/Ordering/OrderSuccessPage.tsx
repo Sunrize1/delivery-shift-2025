@@ -5,39 +5,19 @@ import { useRouter } from "next/navigation";
 import { OrderDeliveryResponse } from "@/types/delivery/OrderDeliveryResponse";
 import SuccessIcon from '../../assets/Ordering/Success.svg'
 import Image from "next/image";
+import { Order } from "@/types/history/getOrdersResponse";
+import { getOptionLabel, getStatusInfo } from "@/utils/enumsTranslators";
 
 interface OrderSuccessPageProps {
-  orderData: OrderDeliveryResponse;
+  orderData: Order;
 }
 
 export default function OrderSuccessPage({ orderData }: OrderSuccessPageProps) {
   const router = useRouter();
 
-  const getStatusLabel = (status: number) => {
-    switch (status) {
-      case 0:
-        return "Создан";
-      case 1:
-        return "В пути";
-      case 2:
-        return "Доставлен";
-      default:
-        return "Неизвестно";
-    }
-  };
 
-  const getOptionLabel = (option: string) => {
-    switch (option) {
-      case "DEFAULT":
-        return "Обычная доставка";
-      case "EXPRESS":
-        return "Экспресс доставка";
-      default:
-        return option;
-    }
-  };
 
-  const orderNumber = `123456789123`;
+
 
   return (
     <Container size="lg" py="xl">
@@ -55,7 +35,7 @@ export default function OrderSuccessPage({ orderData }: OrderSuccessPageProps) {
           <Stack gap="lg">
             <Stack gap="xs">
               <Text size="sm" c="var(--text-secondary)">Номер заказа</Text>
-              <Text fw={600}>{orderNumber}</Text>
+              <Text fw={600}>{orderData._id}</Text>
             </Stack>
 
             <Stack gap="xs">
@@ -69,21 +49,21 @@ export default function OrderSuccessPage({ orderData }: OrderSuccessPageProps) {
                     backgroundColor: 'var(--mantine-color-yellow-6)',
                   }}
                 />
-                <Text>{getStatusLabel(orderData.order.status)}</Text>
+                <Text>{getStatusInfo(orderData.status).label}</Text>
               </Group>
             </Stack>
 
             <Stack gap="xs">
               <Text size="sm" c="var(--text-secondary)">Адрес доставки</Text>
               <Text>
-                Россия, г. {orderData.order.receiverPoint.name}, {orderData.order.receiverAddress.street}, д. {orderData.order.receiverAddress.house}
-                {orderData.order.receiverAddress.apartment && `, кв. ${orderData.order.receiverAddress.apartment}`}
+                Россия, г. {orderData.receiverPoint.name}, {orderData.receiverAddress.street}, д. {orderData.receiverAddress.house}
+                {orderData.receiverAddress.apartment && `, кв. ${orderData.receiverAddress.apartment}`}
               </Text>
             </Stack>
 
             <Stack gap="xs">
               <Text size="sm" c="var(--text-secondary)">Тип доставки</Text>
-              <Text>{getOptionLabel(orderData.order.option)}</Text>
+              <Text>{getOptionLabel(orderData.option ?? '')}</Text>
             </Stack>
           </Stack>
           <Text mt={'lg'} size="sm" c="var(--text-secondary)" >

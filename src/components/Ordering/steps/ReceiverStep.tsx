@@ -40,7 +40,7 @@ export default function ReceiverStep({ form }: ReceiverStepProps) {
           {...form.getInputProps('receiver.phone')}
         />
         {form.errors['receiver.phone'] && (
-          <Text size="sm" c="var(--mantine-color-error" mt={5}>
+          <Text size="sm" c="var(--mantine-color-error)" mt={5}>
             {form.errors['receiver.phone']}
           </Text>
         )}

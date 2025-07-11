@@ -6,6 +6,7 @@ import { OrderDeliveryRequest } from "@/types/delivery/OrderDeliveryRequest";
 import { IMaskInput } from "react-imask";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
+import { formatPhoneForMask } from "@/utils/phoneMapper";
 
 interface SenderStepProps {
   form: UseFormReturnType<OrderDeliveryRequest>;
@@ -26,10 +27,11 @@ export default function SenderStep({ form }: SenderStepProps) {
         form.setFieldValue('sender.middlename', user.middlename);
       }
       if (!form.values.sender.phone) {
-        form.setFieldValue('sender.phone', user.phone);
+        form.setFieldValue('sender.phone', formatPhoneForMask(user.phone));
       }
     }
   }, [isAuthenticated, user]);
+  
   return (
     <Stack gap="md">
       

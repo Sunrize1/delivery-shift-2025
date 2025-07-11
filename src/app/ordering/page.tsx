@@ -216,7 +216,7 @@ export default function OrderingPage() {
   };
 
   if (orderSuccess) {
-    return <OrderSuccessPage orderData={orderSuccess} />;
+    return <OrderSuccessPage orderData={orderSuccess.order} />;
   }
 
   return (
