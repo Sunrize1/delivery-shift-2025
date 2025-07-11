@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { Center, Container, Loader } from "@mantine/core";
 import OrderCardDetails from "@/components/history/orderCardDetails";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HistoryPage() {
     const { id } = useParams();
-
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -20,6 +20,7 @@ export default function HistoryPage() {
                 setLoading(true);
                 const response = await getOrderDetails(id as string);
                 setOrder(response.data.order);
+                setLoading(false);
             } catch (error) {
                 notifications.show({
                     title: "Ошибка",
@@ -27,9 +28,7 @@ export default function HistoryPage() {
                     color: "red",
                 });
                 redirect('/history');
-            } finally {
-                setLoading(false);
-            }
+            } 
         };
 
         fetchOrder();

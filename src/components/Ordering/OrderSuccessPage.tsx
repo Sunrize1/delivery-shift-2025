@@ -15,7 +15,7 @@ interface OrderSuccessPageProps {
 export default function OrderSuccessPage({ orderData }: OrderSuccessPageProps) {
   const router = useRouter();
 
-
+  const fullAddress = `Россия, г.${orderData.receiverPoint.name} ул.${orderData.receiverAddress.street}, д. ${orderData.receiverAddress.house}`;
 
 
 
@@ -56,7 +56,7 @@ export default function OrderSuccessPage({ orderData }: OrderSuccessPageProps) {
             <Stack gap="xs">
               <Text size="sm" c="var(--text-secondary)">Адрес доставки</Text>
               <Text>
-                Россия, г. {orderData.receiverPoint.name}, {orderData.receiverAddress.street}, д. {orderData.receiverAddress.house}
+                {fullAddress}
                 {orderData.receiverAddress.apartment && `, кв. ${orderData.receiverAddress.apartment}`}
               </Text>
             </Stack>

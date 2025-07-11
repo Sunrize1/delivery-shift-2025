@@ -13,6 +13,7 @@ interface OrderCardDetailsProps {
 export default function OrderCardDetails({ order }: OrderCardDetailsProps) {
     const [isCancelOrderModalOpen, setIsCancelOrderModalOpen] = useState(false);
     const router = useRouter();
+    const fullAddress = `Россия, г.${order?.receiverPoint.name} ул.${order?.receiverAddress.street}, д. ${order?.receiverAddress.house}`;
     return (
         <Stack mt={113} gap="xl">
             <Title order={2}>{'Заказ №' + order?._id}</Title>
@@ -27,7 +28,7 @@ export default function OrderCardDetails({ order }: OrderCardDetailsProps) {
                         </Stack>
                         <Stack gap={'xs'}>
                             <Text size="sm" c="var(--text-secondary)">Адрес доставки</Text>
-                            <Text fw={500}>{`Россия, г. ул. ${order?.receiverAddress.street}, д. ${order?.receiverAddress.house}`}</Text>
+                            <Text fw={500}>{fullAddress} {order?.receiverAddress.apartment ? `, кв. ${order?.receiverAddress.apartment}` : ''}</Text>
                         </Stack>
                         <Stack gap={'xs'}>
                             <Text size="sm" c="var(--text-secondary)">Тип доставки</Text>

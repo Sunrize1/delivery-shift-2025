@@ -14,7 +14,7 @@ export default function OrderCard({ order }: OrderCardProps) {
     const router = useRouter();
     const statusInfo = getStatusInfo(order.status);
     
-    const fullAddress = `Россия, г. ул.${order.receiverAddress.street}, д. ${order.receiverAddress.house}`;
+    const fullAddress = `Россия, г.${order.receiverPoint.name} ул.${order.receiverAddress.street}, д. ${order.receiverAddress.house}`;
 
     const handleClick = () => {
         router.push(`/history/${order._id}`);
@@ -33,7 +33,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
                 <div style={{ flex: 1, minWidth: "200px" }}>
                     <Text size="md" c="var(--text-primary)" lineClamp={1}>
-                        {fullAddress}
+                        {fullAddress} {order.receiverAddress.apartment ? `, кв. ${order.receiverAddress.apartment}` : ''}
                     </Text>
                 </div>
 
