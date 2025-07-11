@@ -3,10 +3,12 @@ import { Container, Progress, Stack, Text, Title, Button, Group, Flex } from "@m
 import { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import { OrderDeliveryRequest, payer, optionType } from "@/types/delivery/OrderDeliveryRequest";
+import { OrderDeliveryResponse } from "@/types/delivery/OrderDeliveryResponse";
 import { notifications } from "@mantine/notifications";
 import { orderDelivery } from "@/api/delivery/orderDelivery";
 import { useRouter } from "next/navigation";
 import { phoneMapper } from "@/utils/phoneMapper";
+import OrderSuccessPage from "@/components/Ordering/OrderSuccessPage";
 
 import OptionTypeStep from "@/components/Ordering/steps/OptionTypeStep";
 import ReceiverStep from "@/components/Ordering/steps/ReceiverStep";
@@ -29,6 +31,7 @@ const STEPS = [
 export default function OrderingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState<OrderDeliveryResponse | null>(null);
   const router = useRouter();
 
   const form = useForm<OrderDeliveryRequest>({
@@ -168,15 +171,18 @@ export default function OrderingPage() {
         },
       };
       
-      await orderDelivery(preparedData);
-      notifications.show({
-        title: 'Заказ создан',
-        message: 'Ваш заказ успешно создан!',
-        color: 'green',
-      });
+      const response = await orderDelivery(preparedData);
       
-      localStorage.removeItem('deliveryCalculation');
-      router.push('/profile');
+      if (response.data.success) {
+        setOrderSuccess(response.data);
+        localStorage.removeItem('deliveryCalculation');
+      } else {
+        notifications.show({
+          title: 'Ошибка',
+          message: response.data.reason || 'Не удалось создать заказ',
+          color: 'red',
+        });
+      }
     } catch (error) {
       notifications.show({
         title: 'Ошибка',
@@ -209,6 +215,10 @@ export default function OrderingPage() {
     }
   };
 
+  if (orderSuccess) {
+    return <OrderSuccessPage orderData={orderSuccess} />;
+  }
+
   return (
     <Container size="lg" py="xl">
       <Stack mt={'100px'} gap={'xl'} w={{base: '100%', sm: currentStep === 6 ? "100%" : '464px'}}>
@@ -237,7 +247,7 @@ export default function OrderingPage() {
             </Button>
             
             {currentStep === STEPS.length - 1 ? (
-              <Button type="button" onClick={() => handleSubmit(form.values)} loading={isSubmitting} disabled={isSubmitting} w={'100%'}>
+              <Button type="button"  onClick={() => handleSubmit(form.values)} loading={isSubmitting} disabled={isSubmitting} w={'100%'}>
                 Создать заказ
               </Button>
             ) : (
